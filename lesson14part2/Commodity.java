@@ -3,7 +3,9 @@ package lesson14part2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class Commodity {
@@ -76,6 +78,7 @@ public class Commodity {
 		double widht = sc.nextDouble();
 
 		return new Commodity(name, weight, height, widht);
+		
 	};
 
 	public void addСom() {
@@ -111,32 +114,46 @@ public class Commodity {
 
 	public void replaceCom() {
 		comSet.forEach(System.out::println);
+		Commodity com = Goods.get();
+		
+		Predicate<Commodity> isEqual = commodity -> commodity.getName().equalsIgnoreCase(com.getName());
+		Optional<Commodity> commodityFound = comSet.stream().filter(isEqual).findFirst();
 
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Введіть назву товару, який хочете замінити ");
-		String name1 = sc.next().toUpperCase();
+		if (commodityFound.isPresent()) {
+			System.out.println("Введіть товар для заміни:");
+			Commodity newCommodityTyped = Goods.get();
 
-		Iterator<Commodity> iterator = comSet.iterator();
+			commodityFound.get().setName(newCommodityTyped.getName());
+			commodityFound.get().setHeight(newCommodityTyped.getHeight());
+			commodityFound.get().setWidht(newCommodityTyped.getWidht());
+			commodityFound.get().setWeight(newCommodityTyped.getWeight());
 
-		try {
-			while (iterator.hasNext()) {
-				Commodity next = iterator.next();
-
-				if (next.getName().equalsIgnoreCase(name1)) {
-					iterator.remove();
-					System.out.println("Товар " + name1 + " видалений");
-
-					Commodity com = Goods.get();
-					comSet.add(com);
-					System.out.println("Товар " + com + " доданий");
-					System.out.println("");
-				} else {
-					System.out.println("Товар " + name1 + " відсутній");
-				}
-			}
-		} catch (Exception e) {
-
+			System.out.println("Введенний товар замінений на " + commodityFound.get().toString() + "!");
+		} else {
+			System.out.println("Товар відсутній");
 		}
+
+//		Iterator<Commodity> iterator = comSet.iterator();
+
+//		try {
+//			while (iterator.hasNext()) {
+//				Commodity next = iterator.next();
+//
+//				if (next.getName().equalsIgnoreCase(name1)) {
+//					iterator.remove();
+//					System.out.println("Товар " + name1 + " видалений");
+//
+//					Commodity com = Goods.get();
+//					comSet.add(com);
+//					System.out.println("Товар " + com + " доданий");
+//					System.out.println("");
+//				} else {
+//					System.out.println("Товар " + name1 + " відсутній");
+//				}
+//			}
+//		} catch (Exception e) {
+
+//		}
 		comSet.forEach(System.out::println);
 	}
 
